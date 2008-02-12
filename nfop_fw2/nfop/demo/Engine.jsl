@@ -1,0 +1,66 @@
+package ApacheFop;
+
+import shortcut.*;
+import org.apache.fop.apps.*;
+import org.xml.sax.InputSource;
+import org.apache.avalon.framework.logger.*;
+import System.Xml.*;
+import java.io.*;
+/**
+ * Takes an fo document and returns a PDF.
+ */
+public class Engine {
+
+//	private org.xml.sax.InputSource driverInput;
+//	private java.io.OutputStream driverOutput;
+
+	private void Run(InputSource input, OutputStream output) throws Exception {
+		Driver driver = new Driver(input, output);
+		driver.setRenderer(Driver.RENDER_PDF);
+		driver.run();
+	}
+
+//	public void Run(String foDocument, OutputStream output) throws Exception {
+//		Run(new InputSource(new java.io.StringReader(foDocument)), output);
+//	}
+
+	public byte[] Run(String foDocument) throws Exception {
+		InputSource input = new InputSource(new java.io.StringReader(foDocument));
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		Run(input, byteStream);
+		return byteStream.toByteArray();
+	}
+
+	/** @attribute System.STAThread() */
+	public static void main(String[] args) {
+		try {
+			String foFilePath = "c:\\temp\\tsfo.xml";
+			System.Xml.Xsl.XslTransform xslt = new System.Xml.Xsl.XslTransform();
+			xslt.Load(new XmlTextReader(new System.IO.StreamReader("c:\\temp\\timesheetrep.xsl")));
+			xslt.Transform("c:\\temp\\tsdata.xml", foFilePath);
+
+			System.IO.StreamReader reader = new System.IO.StreamReader(foFilePath);
+			String foString = reader.ReadToEnd();
+
+			byte[] pdf = new Engine().Run(foString);
+			//InputSource driverInput = new InputSource(new FileInputStream(foFilePath));
+			FileOutputStream driverOutput = new FileOutputStream("c:\\temp\\output.pdf");
+			driverOutput.write(pdf);
+			driverOutput.close();
+			System.out.println("Made it here.");
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace(System.err);
+
+		}
+		try {
+			System.in.read();
+		} catch(Exception e){}
+		//		} catch(Exception e) {
+		//			System.out.println(e.getMessage());
+		//			e.printStackTrace(System.err);
+		//
+		//		}
+
+	}
+}
