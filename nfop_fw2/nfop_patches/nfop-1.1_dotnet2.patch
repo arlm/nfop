@@ -1,0 +1,205 @@
+diff -u -r .\fonts\apps\PFMReader.java ..\nfop-orig\fonts\apps\PFMReader.java
+--- .\fonts\apps\PFMReader.java	Wed Mar 09 08:27:40 2005
++++ ..\nfop-orig\fonts\apps\PFMReader.java	Mon Apr 03 18:32:44 2006
+@@ -372,8 +372,8 @@
+ 
+ 
+         // Get kerning
+-        for (Iterator enum = pfm.getKerning().keySet().iterator(); enum.hasNext(); ) {
+-            Integer kpx1 = (Integer)enum.next();
++        for (Iterator enum_ = pfm.getKerning().keySet().iterator(); enum_.hasNext(); ) {
++			Integer kpx1 = (Integer)enum_.next();
+             el = doc.createElement("kerning");
+             el.setAttribute("kpx1", kpx1.toString());
+             root.appendChild(el);
+diff -u -r .\fonts\apps\TTFReader.java ..\nfop-orig\fonts\apps\TTFReader.java
+--- .\fonts\apps\TTFReader.java	Wed Mar 09 08:27:40 2005
++++ ..\nfop-orig\fonts\apps\TTFReader.java	Mon Apr 03 18:32:11 2006
+@@ -424,14 +424,14 @@
+         }
+ 
+         // Get kerning
+-        Iterator enum;
++        Iterator enum_;
+         if (isCid)
+-            enum = ttf.getKerning().keySet().iterator();
++            enum_ = ttf.getKerning().keySet().iterator();
+         else
+-            enum = ttf.getAnsiKerning().keySet().iterator();
++            enum_ = ttf.getAnsiKerning().keySet().iterator();
+ 
+-        while (enum.hasNext()) {
+-            Integer kpx1 = (Integer)enum.next();
++        while (enum_.hasNext()) {
++			Integer kpx1 = (Integer)enum_.next();
+ 
+             el = doc.createElement("kerning");
+             el.setAttribute("kpx1", kpx1.toString());
+Only in ..\nfop-orig: key.snk.pfx
+diff -u -r .\messaging\MessageHandler.java ..\nfop-orig\messaging\MessageHandler.java
+--- .\messaging\MessageHandler.java	Wed Mar 09 08:59:56 2005
++++ ..\nfop-orig\messaging\MessageHandler.java	Mon Apr 03 18:32:43 2006
+@@ -156,9 +156,9 @@
+             break;
+         case EVENT:
+             setMessage(message);
+-            Enumeration enum = listeners.elements();
+-            while (enum.hasMoreElements()) {
+-                ((MessageListener)enum.nextElement()).processMessage(new MessageEvent(getMessage()));
++            Enumeration enum_ = listeners.elements();
++            while (enum_.hasMoreElements()) {
++				((MessageListener)enum_.nextElement()).processMessage(new MessageEvent(getMessage()));
+             }
+             break;
+         case NONE:
+@@ -205,11 +205,11 @@
+             break;
+         case EVENT:
+             setMessage(message);
+-            Enumeration enum = listeners.elements();
+-            while (enum.hasMoreElements()) {
++            Enumeration enum_ = listeners.elements();
++            while (enum_.hasMoreElements()) {
+                 MessageEvent messEv = new MessageEvent(getMessage());
+                 messEv.setMessageType(MessageEvent.ERROR);
+-                ((MessageListener)enum.nextElement()).processMessage(messEv);
++				((MessageListener)enum_.nextElement()).processMessage(messEv);
+             }
+             break;
+         case NONE:
+diff -u -r .\xerces-2_0_2\src\org\apache\xerces\impl\XMLDTDScannerImpl.java ..\nfop-orig\xerces-2_0_2\src\org\apache\xerces\impl\XMLDTDScannerImpl.java
+--- .\xerces-2_0_2\src\org\apache\xerces\impl\XMLDTDScannerImpl.java	Thu Oct 31 09:40:32 2002
++++ ..\nfop-orig\xerces-2_0_2\src\org\apache\xerces\impl\XMLDTDScannerImpl.java	Mon Apr 03 18:36:26 2006
+@@ -1106,21 +1106,21 @@
+ 
+             // call handler
+             if (fDTDHandler != null) {
+-                String[] enum = null;
++                String[] enum_ = null;
+                 if (fEnumerationCount != 0) {
+-                    enum = new String[fEnumerationCount];
+-                    System.arraycopy(fEnumeration, 0, enum,
++                    enum_ = new String[fEnumerationCount];
++                    System.arraycopy(fEnumeration, 0, enum_,
+                                      0, fEnumerationCount);
+                 }
+                 // Determine whether the default value to be passed should be null. 
+                 // REVISIT: should probably check whether fLiteral.ch is null instead. LM.
+                 if (defaultType!=null && (defaultType.equals("#REQUIRED") || 
+                                           defaultType.equals("#IMPLIED"))) {
+-                    fDTDHandler.attributeDecl(elName, name, type, enum,
++                    fDTDHandler.attributeDecl(elName, name, type, enum_,
+                                               defaultType, null, null, null);
+                 }
+                 else {
+-                    fDTDHandler.attributeDecl(elName, name, type, enum,
++                    fDTDHandler.attributeDecl(elName, name, type, enum_,
+                                               defaultType, fLiteral, fLiteral2, null);
+                 }
+             }
+diff -u -r .\xerces-2_0_2\src\org\apache\xerces\impl\xs\traversers\XSAttributeChecker.java ..\nfop-orig\xerces-2_0_2\src\org\apache\xerces\impl\xs\traversers\XSAttributeChecker.java
+--- .\xerces-2_0_2\src\org\apache\xerces\impl\xs\traversers\XSAttributeChecker.java	Thu Oct 31 09:40:36 2002
++++ ..\nfop-orig\xerces-2_0_2\src\org\apache\xerces\impl\xs\traversers\XSAttributeChecker.java	Mon Apr 03 18:38:23 2006
+@@ -1513,11 +1513,11 @@
+     // REVISIT: pass the proper element node to reportSchemaError
+     public void checkNonSchemaAttributes(XSGrammarBucket grammarBucket) {
+         // for all attributes
+-        Enumeration enum = fNonSchemaAttrs.keys();
++        Enumeration enum_ = fNonSchemaAttrs.keys();
+         XSAttributeDecl attrDecl;
+-        while (enum.hasMoreElements()) {
++        while (enum_.hasMoreElements()) {
+             // get name, uri, localpart
+-            String attrRName = (String)enum.nextElement();
++            String attrRName = (String)enum_.nextElement();
+             String attrURI = attrRName.substring(0,attrRName.indexOf(','));
+             String attrLocal = attrRName.substring(attrRName.indexOf(',')+1);
+             // find associated grammar
+@@ -1724,9 +1724,9 @@
+ 
+         int count = attrList.size();
+         this.attrArray = new OneAttr[count];
+-        Enumeration enum = attrList.elements();
++        Enumeration enum_ = attrList.elements();
+         for (int i = 0; i < count; i++)
+-            this.attrArray[i] = (OneAttr)enum.nextElement();
++            this.attrArray[i] = (OneAttr)enum_.nextElement();
+ 
+         this.allowNonSchemaAttr = allowNonSchemaAttr;
+     }
+diff -u -r .\xerces-2_0_2\src\org\apache\xerces\impl\xs\XSGrammarBucket.java ..\nfop-orig\xerces-2_0_2\src\org\apache\xerces\impl\xs\XSGrammarBucket.java
+--- .\xerces-2_0_2\src\org\apache\xerces\impl\xs\XSGrammarBucket.java	Thu Oct 31 09:40:36 2002
++++ ..\nfop-orig\xerces-2_0_2\src\org\apache\xerces\impl\xs\XSGrammarBucket.java	Mon Apr 03 18:38:08 2006
+@@ -180,10 +180,10 @@
+         int count = fGrammarRegistry.size() + (fNoNSGrammar==null ? 0 : 1);
+         SchemaGrammar[] grammars = new SchemaGrammar[count];
+         // get grammars with target namespace
+-        Enumeration enum = fGrammarRegistry.elements();
++        Enumeration enum_ = fGrammarRegistry.elements();
+         int i = 0;
+-        while (enum.hasMoreElements())
+-            grammars[i++] = (SchemaGrammar)enum.nextElement();
++        while (enum_.hasMoreElements())
++            grammars[i++] = (SchemaGrammar)enum_.nextElement();
+         // add the grammar without target namespace, if any
+         if (fNoNSGrammar != null)
+             grammars[count-1] = fNoNSGrammar;
+diff -u -r .\xerces-2_0_2\src\org\apache\xerces\util\AugmentationsImpl.java ..\nfop-orig\xerces-2_0_2\src\org\apache\xerces\util\AugmentationsImpl.java
+--- .\xerces-2_0_2\src\org\apache\xerces\util\AugmentationsImpl.java	Thu Oct 31 09:40:38 2002
++++ ..\nfop-orig\xerces-2_0_2\src\org\apache\xerces\util\AugmentationsImpl.java	Mon Apr 03 18:37:55 2006
+@@ -310,10 +310,10 @@
+         public String toString() {
+             StringBuffer buff = new StringBuffer();
+             buff.append("LargeContainer");
+-            Enumeration enum = fAugmentations.keys();
++            Enumeration enum_ = fAugmentations.keys();
+ 
+-            while (enum.hasMoreElements()) {
+-                Object key = enum.nextElement();
++            while (enum_.hasMoreElements()) {
++                Object key = enum_.nextElement();
+                 buff.append("\nkey == ");
+                 buff.append(key);
+                 buff.append("; value == ");
+diff -u -r .\xerces-2_0_2\src\org\apache\xml\serialize\HTMLSerializer.java ..\nfop-orig\xerces-2_0_2\src\org\apache\xml\serialize\HTMLSerializer.java
+--- .\xerces-2_0_2\src\org\apache\xml\serialize\HTMLSerializer.java	Thu Oct 31 09:40:38 2002
++++ ..\nfop-orig\xerces-2_0_2\src\org\apache\xml\serialize\HTMLSerializer.java	Mon Apr 03 18:40:09 2006
+@@ -339,12 +339,12 @@
+                 preserveSpace = true;
+ 
+             if ( addNSAttr ) {
+-                Enumeration enum;
++                Enumeration enum_;
+ 
+-                enum = _prefixes.keys();
+-                while ( enum.hasMoreElements() ) {
++                enum_ = _prefixes.keys();
++                while ( enum_.hasMoreElements() ) {
+                     _printer.printSpace();
+-                    value = (String) enum.nextElement();
++                    value = (String) enum_.nextElement();
+                     name = (String) _prefixes.get( value );
+                     if ( name.length() == 0 ) {
+                         _printer.printText( "xmlns=\"" );
+diff -u -r .\xerces-2_0_2\src\org\apache\xml\serialize\XMLSerializer.java ..\nfop-orig\xerces-2_0_2\src\org\apache\xml\serialize\XMLSerializer.java
+--- .\xerces-2_0_2\src\org\apache\xml\serialize\XMLSerializer.java	Thu Oct 31 09:40:38 2002
++++ ..\nfop-orig\xerces-2_0_2\src\org\apache\xml\serialize\XMLSerializer.java	Mon Apr 03 18:40:22 2006
+@@ -353,12 +353,12 @@
+             }
+ 
+             if (_prefixes != null) {
+-                Enumeration enum;
++                Enumeration enum_;
+ 
+-                enum = _prefixes.keys();
+-                while (enum.hasMoreElements()) {
++                enum_ = _prefixes.keys();
++                while (enum_.hasMoreElements()) {
+                     _printer.printSpace();
+-                    value = (String) enum.nextElement();
++                    value = (String) enum_.nextElement();
+                     name = (String) _prefixes.get( value );
+                     if (name.length() == 0) {
+                         _printer.printText( "xmlns=\"" );
+
+ 	  	 
