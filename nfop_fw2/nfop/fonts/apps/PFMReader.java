@@ -372,8 +372,8 @@ public class PFMReader extends AbstractLogEnabled {
 
 
         // Get kerning
-        for (Iterator enum = pfm.getKerning().keySet().iterator(); enum.hasNext(); ) {
-            Integer kpx1 = (Integer)enum.next();
+        for (Iterator enum_ = pfm.getKerning().keySet().iterator(); enum_.hasNext(); ) {
+			Integer kpx1 = (Integer)enum_.next();
             el = doc.createElement("kerning");
             el.setAttribute("kpx1", kpx1.toString());
             root.appendChild(el);

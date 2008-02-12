@@ -597,7 +597,7 @@ class Service {
     static HashMap providerMap = new HashMap();
 
     public static synchronized Enumeration providers(Class cls) {
-        ClassLoader cl = cls.getClassLoader();
+        /*ClassLoader cl = cls.getClassLoader();*/
         String serviceFile = "META-INF/services/" + cls.getName();
 
         // System.out.println("File: " + serviceFile);
