@@ -821,7 +821,7 @@ public class PDFRenderer extends PrintRenderer {
         byte[] uniBytes = null;
         try {
             char[] a = {c};
-            uniBytes = new String(a).getBytes("UnicodeBigUnmarked");
+            uniBytes = new String(a).getBytes("UnicodeBig");
         } catch (Exception e) {
             // This should never fail
             throw new org.apache.avalon.framework.CascadingRuntimeException("Incompatible VM", e);

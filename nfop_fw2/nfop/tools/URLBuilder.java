@@ -71,16 +71,20 @@ public class URLBuilder {
      * @return      The requested URL
      * @throws MalformedURLException If spec cannot be converted to a URL.
      */
-    public static URL buildURL(String spec) throws MalformedURLException {
-        if (spec == null) throw new NullPointerException("spec must not be null");
-        File f = new File(spec);
-        if (f.exists()) {
-            return new URL(f.toString());
-        } else {
-            URL u1 = new URL(spec);
-            return u1;
-        }
-    }
+	public static URL buildURL(String spec) throws MalformedURLException
+	{
+		if (spec == null) throw new NullPointerException("spec must not be null");
+		File f = new File(spec);
+		if (f.exists())
+		{
+			return f.toURL();
+		}
+		else
+		{
+			URL u1 = new URL(spec);
+			return u1;
+		}
+	}
 
 
     /**
