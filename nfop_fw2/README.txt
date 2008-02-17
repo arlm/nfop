@@ -1,3 +1,6 @@
-initial import : sources from nfop-src-v1.1.0-fop-0.20.5.zip
+The work is done, nfop supports now ttf fonts, see \tests\userconfig1.pdf :) 
 
-!!! Will not compile with .NET 2.0, please don't use it !!!
+All files in \build are prepared with ilmerge (http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0), 
+all you need is J# runtime.
+
+Check out, compile, run \scripts\makeall.cmd, enjoy ;)

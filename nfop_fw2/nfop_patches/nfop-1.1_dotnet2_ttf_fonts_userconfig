@@ -1,0 +1,1982 @@
+Index: apachefop.net/ApacheFop.Net.vjsproj
+===================================================================
+--- apachefop.net/ApacheFop.Net.vjsproj	(revision 15)
++++ apachefop.net/ApacheFop.Net.vjsproj	(working copy)
+@@ -8,14 +8,14 @@
+     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+     <AssemblyKeyContainerName>
+     </AssemblyKeyContainerName>
+-    <AssemblyName>ApacheFop.Net</AssemblyName>
++    <AssemblyName>apachefop.net</AssemblyName>
+     <AssemblyOriginatorKeyFile>
+     </AssemblyOriginatorKeyFile>
+     <DefaultClientScript>JScript</DefaultClientScript>
+     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+     <DefaultTargetSchema>IE50</DefaultTargetSchema>
+     <OutputType>Library</OutputType>
+-    <RootNamespace>ApacheFop</RootNamespace>
++    <RootNamespace>ApacheFop.Net</RootNamespace>
+     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+     <StartupObject>
+     </StartupObject>
+@@ -25,7 +25,7 @@
+     </UpgradeBackupLocation>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+-    <OutputPath>build\lib\debug\</OutputPath>
++    <OutputPath>bin\Debug\</OutputPath>
+     <BaseAddress>285212672</BaseAddress>
+     <ConfigurationOverrideFile>
+     </ConfigurationOverrideFile>
+@@ -40,7 +40,7 @@
+     <DebugType>full</DebugType>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+-    <OutputPath>build\lib\release\</OutputPath>
++    <OutputPath>bin\Release\</OutputPath>
+     <BaseAddress>285212672</BaseAddress>
+     <ConfigurationOverrideFile>
+     </ConfigurationOverrideFile>
+@@ -78,7 +78,6 @@
+     <Compile Include="apps\FormattingResults.java">
+       <SubType>Code</SubType>
+     </Compile>
+-    <Compile Include="apps\NFop.java" />
+     <Compile Include="apps\PageSequenceResults.java">
+       <SubType>Code</SubType>
+     </Compile>
+@@ -97,7 +96,7 @@
+     <Compile Include="avalon\framework\logger\AbstractLogEnabled.java">
+       <SubType>Code</SubType>
+     </Compile>
+-    <Compile Include="avalon\framework\logger\ConsoleLogger.jsl">
++    <Compile Include="avalon\framework\logger\ConsoleLogger.java">
+       <SubType>Code</SubType>
+     </Compile>
+     <Compile Include="avalon\framework\logger\LogEnabled.java">
+@@ -2092,6 +2091,7 @@
+     <Compile Include="tools\IOUtil.java">
+       <SubType>Code</SubType>
+     </Compile>
++    <Compile Include="apps\NFop.java" />
+     <Compile Include="tools\URLBuilder.java">
+       <SubType>Code</SubType>
+     </Compile>
+Index: apachefop.net/avalon/framework/logger/ConsoleLogger.jsl
+===================================================================
+--- apachefop.net/avalon/framework/logger/ConsoleLogger.jsl	(revision 15)
++++ apachefop.net/avalon/framework/logger/ConsoleLogger.jsl	(working copy)
+@@ -1,181 +0,0 @@
+-package org.apache.avalon.framework.logger;
+-
+-public class ConsoleLogger implements Logger {
+-
+-	public static final int LEVEL_INFO = 3;
+-	public static final int LEVEL_DEBUG = 5;
+-
+-	public ConsoleLogger(int loggingLevel) {}
+-
+-	private void print(String message) {
+-		System.out.println(message);
+-	}
+-
+-	private void print(String message, Throwable throwable) {
+-		System.out.println(message);
+-		System.out.println(throwable.getMessage());
+-		throwable.printStackTrace(System.out);
+-	}
+-
+-	/**
+-	 * Determine if messages of priority "debug" will be logged.
+-	 *
+-	 * @return true if "debug" messages will be logged
+-	 */
+-	public boolean isDebugEnabled() {
+-		return true;
+-	}
+-	public void debug( String message ) {
+-		if(isDebugEnabled())
+-			print(message);
+-	}
+-	/**
+-	 * Log a debug message.
+-	 *
+-	 * @param message the message
+-	 * @param throwable the throwable
+-	 */
+-	public void debug( String message, Throwable throwable ) {
+-		if(isDebugEnabled()) {
+-			print(message, throwable);
+-		}
+-	}
+-
+-	/**
+-	 * Determine if messages of priority "info" will be logged.
+-	 *
+-	 * @return true if "info" messages will be logged
+-	 */
+-	public boolean isInfoEnabled() {
+-		return true;
+-	}
+-
+-	/**
+-	 * Log a info message.
+-	 *
+-	 * @param message the message
+-	 */
+-	public void info( String message ) {
+-		if(isInfoEnabled())
+-			print(message);
+-	}
+-	/**
+-	* Log a info message.
+-	*
+-	* @param message the message
+-	* @param throwable the throwable
+-	*/
+-	public void info( String message, Throwable throwable ) {
+-		if(isInfoEnabled())
+-			print(message, throwable);
+-	}
+-
+-
+-	/**
+-	* Log a warn message.
+-	*
+-	* @param message the message
+-	*/
+-	public void warn( String message ) {
+-		if(isWarnEnabled()) {
+-			print(message);
+-		}
+-	}
+-
+-	/**
+-	* Log a warn message.
+-	*
+-	* @param message the message
+-	* @param throwable the throwable
+-	*/
+-	public void warn( String message, Throwable throwable ) {
+-		if(isWarnEnabled()) {
+-			print(message, throwable);
+-		}
+-	}
+-
+-	/**
+-	* Determine if messages of priority "warn" will be logged.
+-	*
+-	* @return true if "warn" messages will be logged
+-	*/
+-	public boolean isWarnEnabled() {
+-		return true;
+-	}
+-
+-	/**
+-		* Log a error message.
+-		*
+-		* @param message the message
+-		*/
+-	public void error( String message ) {
+-		if(isErrorEnabled())
+-			print(message);
+-	}
+-
+-		/**
+-		 * Log a error message.
+-		 *
+-		 * @param message the message
+-		 * @param throwable the throwable
+-		 */
+-	public void error( String message, Throwable throwable ) {
+-		if(isErrorEnabled()) {
+-			print(message, throwable);
+-		}
+-	}
+-
+-		/**
+-		 * Determine if messages of priority "error" will be logged.
+-		 *
+-		 * @return true if "error" messages will be logged
+-		 */
+-	public boolean isErrorEnabled() {
+-		return true;
+-	}
+-
+-			/**
+-			 * Log a fatalError message.
+-			 *
+-			 * @param message the message
+-			 */
+-	public void fatalError( String message ) {		
+-		if(isFatalErrorEnabled()) {
+-			print(message);
+-		}
+-	}
+-
+-
+-		/**
+-		 * Log a fatalError message.
+-		 *
+-		 * @param message the message
+-		 * @param throwable the throwable
+-		 */
+-	public void fatalError( String message, Throwable throwable ) {
+-		if(isFatalErrorEnabled()) {
+-			print(message, throwable);
+-		}
+-	}
+-
+-		/**
+-		 * Determine if messages of priority "fatalError" will be logged.
+-		 *
+-		 * @return true if "fatalError" messages will be logged
+-		 */
+-	public boolean isFatalErrorEnabled() {
+-		return true;
+-	}
+-
+-			/**
+-			 * Create a new child logger.
+-			 * The name of the child logger is [current-loggers-name].[passed-in-name]
+-			 *
+-			 * @param name the subname of this logger
+-			 * @return the new logger
+-			 * @exception IllegalArgumentException if name has an empty element name
+-			 */
+-	public Logger getChildLogger( String name ) {
+-		return new ConsoleLogger(LEVEL_INFO);
+-	}
+-}
+\ No newline at end of file
+Index: build/nfop.dll
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: build\nfop.dll
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Index: build/nfop.exe
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: build\nfop.exe
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Index: build/ttfreader.exe
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: build\ttfreader.exe
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Index: conf/userconfig.xml
+===================================================================
+--- conf/userconfig.xml	(revision 0)
++++ conf/userconfig.xml	(revision 0)
+@@ -0,0 +1,41 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<configuration>
++	<fonts>
++		<font metrics-file="..\conf\arial.xml" embed-file="..\conf\arial.ttf" kerning="yes">
++			<font-triplet name="Arial" style="normal" weight="normal"/>
++		</font>
++		<font metrics-file="..\conf\arial-bold.xml" embed-file="..\conf\arialbd.ttf" kerning="yes">
++			<font-triplet name="Arial" style="normal" weight="bold"/>
++		</font>
++		<font metrics-file="..\conf\arial-italic.xml" embed-file="..\conf\ariali.ttf" kerning="yes">
++			<font-triplet name="Arial" style="italic" weight="normal"/>
++		</font>
++		<font metrics-file="..\conf\arial-italic-bold.xml" embed-file="..\conf\arialbi.ttf" kerning="yes">
++			<font-triplet name="Arial" style="italic" weight="bold"/>
++		</font>
++		<font metrics-file="..\conf\cour-new.xml" embed-file="..\conf\cour.ttf" kerning="yes">
++			<font-triplet name="CourierNew" style="normal" weight="normal"/>
++		</font>
++		<font metrics-file="..\conf\courier-new-bold.xml" embed-file="..\conf\courbd.ttf" kerning="yes">
++			<font-triplet name="CourierNew" style="normal" weight="bold"/>
++		</font>
++		<font metrics-file="..\conf\courier-new-italic.xml" embed-file="..\conf\couri.ttf" kerning="yes">
++			<font-triplet name="CourierNew" style="italic" weight="normal"/>
++		</font>
++		<font metrics-file="..\conf\courier-new-italic-bold.xml" embed-file="..\conf\courbi.ttf" kerning="yes">
++			<font-triplet name="CourierNew" style="italic" weight="bold"/>
++		</font>
++		<font metrics-file="..\conf\times-new-roman.xml" embed-file="..\conf\times.ttf" kerning="yes">
++			<font-triplet name="TimesNewRoman" style="normal" weight="normal"/>
++		</font>
++		<font metrics-file="..\conf\times-new-roman-bold.xml" embed-file="..\conf\timesbd.ttf" kerning="yes">
++			<font-triplet name="TimesNewRoman" style="normal" weight="bold"/>
++		</font>
++		<font metrics-file="..\conf\times-new-roman-italic.xml" embed-file="..\conf\timesi.ttf" kerning="yes">
++			<font-triplet name="TimesNewRoman" style="italic" weight="normal"/>
++		</font>
++		<font metrics-file="..\conf\times-new-roman-italic-bold.xml" embed-file="..\conf\timesbi.ttf" kerning="yes">
++			<font-triplet name="TimesNewRoman" style="italic" weight="bold"/>
++		</font>
++	</fonts>
++</configuration>
+Index: nfop/nfop.sln
+===================================================================
+--- nfop/nfop.sln	(revision 15)
++++ nfop/nfop.sln	(working copy)
+@@ -1,7 +1,13 @@
+ Microsoft Visual Studio Solution File, Format Version 9.00
+ # Visual Studio 2005
+-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ApacheFop.Net", "ApacheFop.Net.vjsproj", "{020E2B1A-0E89-4738-9DBE-A66660654E55}"
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TTFReader", "TTFReader\TTFReader.csproj", "{2DFB469C-4313-4805-9DB1-03C624D964DE}"
+ EndProject
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fop.Net", "nfop\Fop.Net.csproj", "{90AF5D94-1F24-4275-B51E-08252CCA816C}"
++EndProject
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFopApp", "nfopapp\NFopApp.csproj", "{0220014E-4F5B-4191-8501-65FB3341AD50}"
++EndProject
++Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ApacheFop.Net", "..\apachefop.net\ApacheFop.Net.vjsproj", "{020E2B1A-0E89-4738-9DBE-A66660654E55}"
++EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Any CPU = Debug|Any CPU
+@@ -12,6 +18,36 @@
+ 		Release|x86 = Release|x86
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Debug|x86.ActiveCfg = Debug|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Release|Any CPU.Build.0 = Release|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
++		{2DFB469C-4313-4805-9DB1-03C624D964DE}.Release|x86.ActiveCfg = Release|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Debug|x86.ActiveCfg = Debug|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Release|Any CPU.Build.0 = Release|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
++		{90AF5D94-1F24-4275-B51E-08252CCA816C}.Release|x86.ActiveCfg = Release|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Debug|Any CPU.Build.0 = Debug|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Debug|x86.ActiveCfg = Debug|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Release|Any CPU.ActiveCfg = Release|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Release|Any CPU.Build.0 = Release|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Release|Mixed Platforms.Build.0 = Release|Any CPU
++		{0220014E-4F5B-4191-8501-65FB3341AD50}.Release|x86.ActiveCfg = Release|Any CPU
+ 		{020E2B1A-0E89-4738-9DBE-A66660654E55}.Debug|Any CPU.ActiveCfg = Debug|x86
+ 		{020E2B1A-0E89-4738-9DBE-A66660654E55}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+ 		{020E2B1A-0E89-4738-9DBE-A66660654E55}.Debug|Mixed Platforms.Build.0 = Debug|x86
+Index: nfop/nfop/Fop.Net.csproj
+===================================================================
+--- nfop/nfop/Fop.Net.csproj	(revision 0)
++++ nfop/nfop/Fop.Net.csproj	(revision 0)
+@@ -0,0 +1,53 @@
++﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <PropertyGroup>
++    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
++    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
++    <ProductVersion>8.0.50727</ProductVersion>
++    <SchemaVersion>2.0</SchemaVersion>
++    <ProjectGuid>{90AF5D94-1F24-4275-B51E-08252CCA816C}</ProjectGuid>
++    <OutputType>Library</OutputType>
++    <AppDesignerFolder>Properties</AppDesignerFolder>
++    <RootNamespace>Fop.Net</RootNamespace>
++    <AssemblyName>fop.net</AssemblyName>
++  </PropertyGroup>
++  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
++    <DebugSymbols>true</DebugSymbols>
++    <DebugType>full</DebugType>
++    <Optimize>false</Optimize>
++    <OutputPath>bin\Debug\</OutputPath>
++    <DefineConstants>DEBUG;TRACE</DefineConstants>
++    <ErrorReport>prompt</ErrorReport>
++    <WarningLevel>4</WarningLevel>
++  </PropertyGroup>
++  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
++    <DebugType>pdbonly</DebugType>
++    <Optimize>true</Optimize>
++    <OutputPath>bin\Release\</OutputPath>
++    <DefineConstants>TRACE</DefineConstants>
++    <ErrorReport>prompt</ErrorReport>
++    <WarningLevel>4</WarningLevel>
++  </PropertyGroup>
++  <ItemGroup>
++    <Reference Include="System" />
++    <Reference Include="System.Data" />
++    <Reference Include="System.Xml" />
++  </ItemGroup>
++  <ItemGroup>
++    <Compile Include="NFop.cs" />
++    <Compile Include="Properties\AssemblyInfo.cs" />
++  </ItemGroup>
++  <ItemGroup>
++    <ProjectReference Include="..\..\apachefop.net\ApacheFop.Net.vjsproj">
++      <Project>{020E2B1A-0E89-4738-9DBE-A66660654E55}</Project>
++      <Name>ApacheFop.Net</Name>
++    </ProjectReference>
++  </ItemGroup>
++  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
++  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
++       Other similar extension points exist, see Microsoft.Common.targets.
++  <Target Name="BeforeBuild">
++  </Target>
++  <Target Name="AfterBuild">
++  </Target>
++  -->
++</Project>
+\ No newline at end of file
+Index: nfop/nfop/NFop.cs
+===================================================================
+--- nfop/nfop/NFop.cs	(revision 0)
++++ nfop/nfop/NFop.cs	(revision 0)
+@@ -0,0 +1,256 @@
++/*
++ * $Id: NFop.cs,v 1.0 2008/02/17 mrbool Exp $
++ * ============================================================================
++ *                    The Apache Software License, Version 1.1
++ * ============================================================================
++ * 
++ * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
++ * 
++ * Redistribution and use in source and binary forms, with or without modifica-
++ * tion, are permitted provided that the following conditions are met:
++ * 
++ * 1. Redistributions of source code must retain the above copyright notice,
++ *    this list of conditions and the following disclaimer.
++ * 
++ * 2. Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ * 
++ * 3. The end-user documentation included with the redistribution, if any, must
++ *    include the following acknowledgment: "This product includes software
++ *    developed by the Apache Software Foundation (http://www.apache.org/)."
++ *    Alternately, this acknowledgment may appear in the software itself, if
++ *    and wherever such third-party acknowledgments normally appear.
++ * 
++ * 4. The names "FOP" and "Apache Software Foundation" must not be used to
++ *    endorse or promote products derived from this software without prior
++ *    written permission. For written permission, please contact
++ *    apache@apache.org.
++ * 
++ * 5. Products derived from this software may not be called "Apache", nor may
++ *    "Apache" appear in their name, without prior written permission of the
++ *    Apache Software Foundation.
++ * 
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
++ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
++ * APACHE SOFTWARE FOUNDATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLU-
++ * DING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
++ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ * ============================================================================
++ * 
++ * This software consists of voluntary contributions made by many individuals
++ * on behalf of the Apache Software Foundation and was originally created by
++ * James Tauber <jtauber@jtauber.com>. For more information on the Apache
++ * Software Foundation, please see <http://www.apache.org/>.
++ */ 
++
++using System;
++
++namespace Fop.Net
++{
++    public class NFop
++    {
++        public static System.Xml.XmlDocument GetXml(string xmlFile)
++        {
++            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
++            doc.Load(xmlFile);
++            return doc;
++        }
++
++        public static System.Xml.Xsl.XslCompiledTransform GetXsl(string xslFile)
++        {
++            System.Xml.Xsl.XslCompiledTransform xslt = new System.Xml.Xsl.XslCompiledTransform();
++            xslt.Load(xslFile);
++            return xslt;
++        }
++
++        public static string GetFo(string foFile)
++        {
++            string fo = null;
++
++            using (System.IO.StreamReader sr = System.IO.File.OpenText(foFile))
++            {
++                fo = sr.ReadToEnd();
++            }
++
++            return fo;
++        }
++
++        public static byte[] CreatePDF(string xmlFile, string xslFile)
++        {
++            return CreatePDF(xmlFile, xslFile, (org.apache.fop.apps.FileUrl)null);
++        }
++
++        public static byte[] CreatePDF(string xmlFile, string xslFile, org.apache.fop.apps.FileUrl configFile)
++        {
++            System.Xml.XmlDocument doc = GetXml(xmlFile);
++            System.Xml.Xsl.XslCompiledTransform xslt = GetXsl(xslFile);
++            return CreatePDF(doc, xslt, configFile);
++
++        }
++
++        //public static byte[] CreatePDF(string xmlFile, string xslFile, string foFile)
++        //{
++        //    System.Xml.XmlDocument doc = GetXml(xmlFile);
++        //    System.Xml.Xsl.XslCompiledTransform xslt = GetXsl(xslFile);
++        //    return CreatePDF(doc, xslt, foFile);
++
++        //}
++
++
++        public static byte[] CreatePDF(string xmlFile, string xslFile, string foFile, org.apache.fop.apps.FileUrl configFile)
++        {
++            System.Xml.XmlDocument doc = GetXml(xmlFile);
++            System.Xml.Xsl.XslCompiledTransform xslt = GetXsl(xslFile);
++            return CreatePDF(doc, xslt, foFile, configFile);
++        }
++
++        public static byte[] CreatePDF(System.Xml.XmlDocument doc, System.Xml.Xsl.XslCompiledTransform xslt, org.apache.fop.apps.FileUrl configFile)
++        {
++            string fo = CreateFO(doc, xslt);
++
++            return CreatePDF(fo, configFile);
++        }
++
++        public static byte[] CreatePDF(System.Xml.XmlDocument doc, System.Xml.Xsl.XslCompiledTransform xslt, string foFile)
++        {
++            return CreatePDF(doc, xslt, foFile, (org.apache.fop.apps.FileUrl)null);
++        }
++
++        public static byte[] CreatePDF(System.Xml.XmlDocument doc, System.Xml.Xsl.XslCompiledTransform xslt, string foFile, org.apache.fop.apps.FileUrl configFile)
++        {
++            string fo = CreateFO(doc, xslt);
++
++            CreateFile(System.Text.Encoding.UTF8.GetBytes(fo), foFile);
++
++            return CreatePDF(fo, configFile);
++        }
++
++        public static string CreateFO(System.Xml.XmlDocument doc, System.Xml.Xsl.XslCompiledTransform xslt)
++        {
++            string fo = null;
++
++            using (System.IO.StringReader stringReader = new System.IO.StringReader(doc.OuterXml))
++            {
++                using (System.Xml.XmlTextReader xmlTextReader = new System.Xml.XmlTextReader(stringReader))
++                {
++                    using (System.IO.StringWriter stringWriter = new System.IO.StringWriter())
++                    {
++                        using (System.Xml.XmlTextWriter xmlTextWriter = new System.Xml.XmlTextWriter(stringWriter))
++                        {
++                            xslt.Transform(xmlTextReader, xmlTextWriter);
++                            stringWriter.Flush();
++                            fo = stringWriter.ToString();
++                        }
++                    }
++                }
++            }
++
++            return fo;
++        }
++
++        public static byte[] CreatePDF(string fo)
++        {
++            return CreatePDF(fo, (org.apache.fop.apps.FileUrl)null);
++        }
++
++        public static byte[] CreatePDF(string fo, org.apache.fop.apps.FileUrl configFile)
++        {
++            sbyte[] pdfByteArray = org.apache.fop.apps.NFop.CreatePDF(fo, configFile);
++
++            CheckBuffer(pdfByteArray);
++
++            if (pdfByteArray.Length > 0)
++            {
++                byte[] buffer = new byte[pdfByteArray.Length];
++
++                Buffer.BlockCopy(pdfByteArray, 0, buffer, 0, buffer.Length);
++
++                return buffer;
++            }
++
++            return null;
++
++        }
++        public static void CreateFile(byte[] buffer, string path)
++        {
++            CheckBuffer(buffer);
++            CheckFile(path);
++
++            using (System.IO.FileStream fs = new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write))
++            {
++                using (System.IO.BinaryWriter sw = new System.IO.BinaryWriter(fs))
++                {
++                    sw.Write(buffer);
++                    sw.Flush();
++                }
++            }
++        }
++
++        public static void CheckBuffer(sbyte[] buffer)
++        {
++            if (buffer == null || buffer.Length == 0) throw new ArgumentException("No data will be written , output buffer is empty");
++        }
++
++        public static void CheckBuffer(byte[] buffer)
++        {
++            if (buffer == null || buffer.Length == 0) throw new ArgumentException("No data will be written , output buffer is empty");
++        }
++
++        public static void CheckFile(string path)
++        {
++            if (path == null) throw new ArgumentNullException("No data will be written, target file name is not specified");
++            if (path == string.Empty) throw new ArgumentException("No data will be written, target file name is not specified");
++            if (path.Trim() == string.Empty) throw new ArgumentException("No data will be written, target file name is not specified");
++
++            if (System.IO.File.Exists(path))
++            {
++                if (new System.IO.FileInfo(path).IsReadOnly) throw new System.IO.IOException(string.Format("No data will be written, file {0} is read only", path));
++            }
++        }
++
++        public static void Create_PDF_from_FO(string foFile, string pdfFile)
++        {
++            string fo = Fop.Net.NFop.GetFo(foFile);
++            byte[] bytes = Fop.Net.NFop.CreatePDF(fo);
++            Fop.Net.NFop.CreateFile(bytes, pdfFile);
++        }
++
++        public static void Create_PDF_from_FO_with_CONFIG(string foFile, string pdfFile, string cfgFile)
++        {
++            string fo = Fop.Net.NFop.GetFo(foFile);
++            byte[] bytes = Fop.Net.NFop.CreatePDF(fo, new org.apache.fop.apps.FileUrl(cfgFile));
++            Fop.Net.NFop.CreateFile(bytes, pdfFile);
++        }
++
++        public static void Create_PDF_from_XML_XSL(string xmlFile,string xslFile, string pdfFile)
++        {
++            byte[] bytes = Fop.Net.NFop.CreatePDF(xmlFile, xslFile);
++            Fop.Net.NFop.CreateFile(bytes, pdfFile);
++        }
++
++        public static void Create_PDF_from_XML_XSL_with_CONFIG(string xmlFile, string xslFile, string pdfFile,string cfgFile)
++        {
++            byte[] bytes = Fop.Net.NFop.CreatePDF(xmlFile, xslFile, new org.apache.fop.apps.FileUrl(cfgFile));
++            Fop.Net.NFop.CreateFile(bytes, pdfFile);
++        }
++
++        public static void Create_PDF_and_FO_from_XML_XSL(string xmlFile, string xslFile, string foFile, string pdfFile)
++        {
++            Create_PDF_and_FO_from_XML_XSL_with_CONFIG(xmlFile, xslFile, foFile, pdfFile, null);
++        }
++
++        public static void Create_PDF_and_FO_from_XML_XSL_with_CONFIG(string xmlFile, string xslFile,string foFile,string pdfFile, string cfgFile)
++        {
++            byte[] bytes = Fop.Net.NFop.CreatePDF(xmlFile, xslFile, foFile, new org.apache.fop.apps.FileUrl(cfgFile));
++            Fop.Net.NFop.CreateFile(bytes, pdfFile);
++        }
++
++    }
++
++}
+Index: nfop/nfop/Properties/AssemblyInfo.cs
+===================================================================
+--- nfop/nfop/Properties/AssemblyInfo.cs	(revision 0)
++++ nfop/nfop/Properties/AssemblyInfo.cs	(revision 0)
+@@ -0,0 +1,35 @@
++﻿using System.Reflection;
++using System.Runtime.CompilerServices;
++using System.Runtime.InteropServices;
++
++// General Information about an assembly is controlled through the following 
++// set of attributes. Change these attribute values to modify the information
++// associated with an assembly.
++[assembly: AssemblyTitle("Fop.Net")]
++[assembly: AssemblyDescription("")]
++[assembly: AssemblyConfiguration("")]
++[assembly: AssemblyCompany("")]
++[assembly: AssemblyProduct("NFop")]
++[assembly: AssemblyCopyright("Copyright ©  2008")]
++[assembly: AssemblyTrademark("")]
++[assembly: AssemblyCulture("")]
++
++// Setting ComVisible to false makes the types in this assembly not visible 
++// to COM components.  If you need to access a type in this assembly from 
++// COM, set the ComVisible attribute to true on that type.
++[assembly: ComVisible(false)]
++
++// The following GUID is for the ID of the typelib if this project is exposed to COM
++[assembly: Guid("11efeb06-be89-4bc3-87e0-8542ae8d00c8")]
++
++// Version information for an assembly consists of the following four values:
++//
++//      Major Version
++//      Minor Version 
++//      Build Number
++//      Revision
++//
++// You can specify all the values or you can default the Revision and Build Numbers 
++// by using the '*' as shown below:
++[assembly: AssemblyVersion("1.0.0.0")]
++[assembly: AssemblyFileVersion("1.0.0.0")]
+Index: nfop/nfopapp/CommandLineArgumentException.cs
+===================================================================
+--- nfop/nfopapp/CommandLineArgumentException.cs	(revision 0)
++++ nfop/nfopapp/CommandLineArgumentException.cs	(revision 0)
+@@ -0,0 +1,62 @@
++/*
++ * $Id: CommandLineArgumentException.cs,v 1.0 2008/02/17 mrbool Exp $
++ * ============================================================================
++ *                    The Apache Software License, Version 1.1
++ * ============================================================================
++ * 
++ * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
++ * 
++ * Redistribution and use in source and binary forms, with or without modifica-
++ * tion, are permitted provided that the following conditions are met:
++ * 
++ * 1. Redistributions of source code must retain the above copyright notice,
++ *    this list of conditions and the following disclaimer.
++ * 
++ * 2. Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ * 
++ * 3. The end-user documentation included with the redistribution, if any, must
++ *    include the following acknowledgment: "This product includes software
++ *    developed by the Apache Software Foundation (http://www.apache.org/)."
++ *    Alternately, this acknowledgment may appear in the software itself, if
++ *    and wherever such third-party acknowledgments normally appear.
++ * 
++ * 4. The names "FOP" and "Apache Software Foundation" must not be used to
++ *    endorse or promote products derived from this software without prior
++ *    written permission. For written permission, please contact
++ *    apache@apache.org.
++ * 
++ * 5. Products derived from this software may not be called "Apache", nor may
++ *    "Apache" appear in their name, without prior written permission of the
++ *    Apache Software Foundation.
++ * 
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
++ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
++ * APACHE SOFTWARE FOUNDATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLU-
++ * DING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
++ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ * ============================================================================
++ * 
++ * This software consists of voluntary contributions made by many individuals
++ * on behalf of the Apache Software Foundation and was originally created by
++ * James Tauber <jtauber@jtauber.com>. For more information on the Apache
++ * Software Foundation, please see <http://www.apache.org/>.
++ */
++
++using System;
++using System.Collections.Generic;
++using System.Text;
++
++namespace NFopApp
++{
++    public class CommandLineArgumentException : ArgumentException
++    {
++        public CommandLineArgumentException(string message, string parameter) : base(message, parameter) { }
++    }
++}
+Index: nfop/nfopapp/CommandLineArguments.cs
+===================================================================
+--- nfop/nfopapp/CommandLineArguments.cs	(revision 0)
++++ nfop/nfopapp/CommandLineArguments.cs	(revision 0)
+@@ -0,0 +1,389 @@
++/*
++ * $Id: CommandLineArguments.cs,v 1.0 2008/02/17 mrbool Exp $
++ * ============================================================================
++ *                    The Apache Software License, Version 1.1
++ * ============================================================================
++ * 
++ * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
++ * 
++ * Redistribution and use in source and binary forms, with or without modifica-
++ * tion, are permitted provided that the following conditions are met:
++ * 
++ * 1. Redistributions of source code must retain the above copyright notice,
++ *    this list of conditions and the following disclaimer.
++ * 
++ * 2. Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ * 
++ * 3. The end-user documentation included with the redistribution, if any, must
++ *    include the following acknowledgment: "This product includes software
++ *    developed by the Apache Software Foundation (http://www.apache.org/)."
++ *    Alternately, this acknowledgment may appear in the software itself, if
++ *    and wherever such third-party acknowledgments normally appear.
++ * 
++ * 4. The names "FOP" and "Apache Software Foundation" must not be used to
++ *    endorse or promote products derived from this software without prior
++ *    written permission. For written permission, please contact
++ *    apache@apache.org.
++ * 
++ * 5. Products derived from this software may not be called "Apache", nor may
++ *    "Apache" appear in their name, without prior written permission of the
++ *    Apache Software Foundation.
++ * 
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
++ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
++ * APACHE SOFTWARE FOUNDATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLU-
++ * DING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
++ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ * ============================================================================
++ * 
++ * This software consists of voluntary contributions made by many individuals
++ * on behalf of the Apache Software Foundation and was originally created by
++ * James Tauber <jtauber@jtauber.com>. For more information on the Apache
++ * Software Foundation, please see <http://www.apache.org/>.
++ */
++
++using System;
++
++namespace NFopApp
++{
++    public class CommandLineArguments
++    {
++        public const string USERCONFIG_KEY = "-c";
++        public const string FO_KEY = "-fo";
++        public const string XML_KEY = "-xml";
++        public const string XSL_KEY = "-xsl";
++        public const string PDF_KEY = "-pdf";
++        public const string FOOUT_KEY = "-foout";
++        protected string _USER_CONFIG_PARAM = null;
++
++        protected System.Collections.Generic.Dictionary<string, string> _arguments = null;
++
++        protected static System.Collections.Generic.Dictionary<string, string> validArguments = null;
++
++
++        public CommandLineArguments(string[] args)
++        {
++            Parse(args);
++        }
++
++        public virtual System.Collections.Generic.Dictionary<string, string> GetValidArguments()
++        {
++            if (validArguments == null)
++            {
++                validArguments = new System.Collections.Generic.Dictionary<string, string>();
++                validArguments.Add(USERCONFIG_KEY, USERCONFIG_KEY);
++                validArguments.Add(FO_KEY        , FO_KEY);
++                validArguments.Add(XML_KEY       , XML_KEY);
++                validArguments.Add(XSL_KEY       , XSL_KEY);
++                validArguments.Add(PDF_KEY       , PDF_KEY);
++                validArguments.Add(FOOUT_KEY     , FOOUT_KEY);
++            }
++
++            return validArguments;
++        }
++
++        protected bool ParseShort(string[] tokens, System.Collections.Generic.Dictionary<string, string> arguments)
++        {
++            if (tokens.Length == 2)
++            {
++                string arg0 = PrepareToken(tokens[0]);
++                string arg1 = PrepareToken(tokens[1]);
++
++                if (IsEmptyToken(arg0) == false && IsEmptyToken(arg1) == false)
++                {
++
++                    if (arg0.ToLower().EndsWith(".fo")  && arg1.ToLower().EndsWith(".pdf"))
++                    {
++                        arguments.Add(FO_KEY, arg0);
++                        arguments.Add(PDF_KEY, arg1);
++
++                        return true;
++                    }
++                    else if (arg0.ToLower().EndsWith(".pdf") && arg1.ToLower().EndsWith(".fo"))
++                    {
++                        arguments.Add(PDF_KEY, arg0);
++                        arguments.Add(FO_KEY, arg1);
++
++                        return true;
++                    }
++                    else
++                    {
++                        arguments.Add(FO_KEY, arg0);
++                        arguments.Add(PDF_KEY, arg1);
++
++                        return true;
++                    }
++                }
++            }
++
++            return false;
++        }
++
++        protected void ParseFull(string[] tokens, System.Collections.Generic.Dictionary<string, string> arguments)
++        {
++            for (int token_index = 0; token_index < tokens.Length; token_index++)
++            {
++                string token = PrepareToken(tokens[token_index]);
++
++                if (IsEmptyToken(token) == false)
++                {
++                    if (IsValidToken(token))
++                    {
++                        if (HasNextToken(token_index, tokens.Length))
++                        {
++                            token_index++;
++
++                            string value = PrepareToken(tokens[token_index]);
++
++                            if (IsEmptyToken(value) == false)
++                            {
++                                if (token == USERCONFIG_KEY)
++                                {
++                                    _USER_CONFIG_PARAM = value;
++                                }
++                                else
++                                {
++                                    arguments.Add(token, value);
++                                }
++                            }
++                        }
++                    }
++                }
++            }
++        }
++
++        public virtual void Parse(string[] tokens)
++        {
++            if (tokens != null)
++            {
++                if (tokens.Length > 0)
++                {
++                    int tokensLength = tokens.Length;
++
++                    _arguments = new System.Collections.Generic.Dictionary<string, string>(tokensLength);
++
++                    if (ParseShort(tokens, _arguments)==false)
++                    {
++                        ParseFull(tokens, _arguments);
++                    }
++
++                    if (HasArguments && HasUSERCONFIG==false)
++                    { 
++                      string NFOP_USER_CONFIG_PATH = PrepareToken(Environment.GetEnvironmentVariable("NFOP_USER_CONFIG_PATH"));
++
++                      if (IsEmptyToken(NFOP_USER_CONFIG_PATH) == false)
++                      {
++                          this._USER_CONFIG_PARAM = NFOP_USER_CONFIG_PATH;
++                      }
++
++                    }
++                }
++            }
++
++        }
++
++        public virtual bool HasNextToken(int current_index, int tokensLength)
++        {
++            return current_index < tokensLength;
++        }
++
++        public virtual bool IsEmptyToken(string token)
++        {
++            return string.IsNullOrEmpty(token);
++        }
++
++        public virtual string PrepareToken(string token)
++        {
++            if (token != null)
++            {
++                return token.Trim().ToLower();
++            }
++
++            return token;
++        }
++
++
++        public System.Collections.Generic.Dictionary<string, string> Arguments
++        {
++            get { return _arguments; }
++        }
++
++        public virtual bool HasArguments
++        {
++            get
++            {
++                if (_arguments == null) return false;
++
++                return _arguments.Count > 0;
++            }
++        }
++
++        public bool IsValidToken(string key)
++        {
++            System.Collections.Generic.Dictionary<string, string> validArguments = GetValidArguments();
++
++            return validArguments.ContainsKey(key);
++        }
++
++        protected virtual bool HasKeyAndValue(string key)
++        {
++            if (HasArguments)
++            {
++                if (_arguments.ContainsKey(key))
++                {
++                    return string.IsNullOrEmpty(_arguments[key]) == false;
++                }
++            }
++
++            return false;
++        }
++
++        protected virtual string GetValue(string key)
++        {
++            if (HasKeyAndValue(key))
++            {
++                return _arguments[key];
++            }
++
++            throw new CommandLineArgumentException("error : command line argument", string.Format("command line parameter {0} is not set",key));
++        }
++
++        public bool HasUSERCONFIG
++        {
++            get
++            {
++
++                return string.IsNullOrEmpty(_USER_CONFIG_PARAM)==false;
++            }
++        }
++
++        public bool HasFO
++        {
++            get
++            {
++
++                return HasKeyAndValue(FO_KEY);
++            }
++        }
++
++        public bool HasXML
++        {
++            get
++            {
++
++                return HasKeyAndValue(XML_KEY);
++            }
++        }
++
++        public bool HasXSL
++        {
++            get
++            {
++
++                return HasKeyAndValue(XSL_KEY);
++            }
++        }
++
++
++        public bool HasPDF
++        {
++            get
++            {
++
++                return HasKeyAndValue(PDF_KEY);
++            }
++        }
++
++        public bool HasFOOUT
++        {
++            get
++            {
++
++                return HasKeyAndValue(FOOUT_KEY);
++            }
++        }
++
++        public string USERCONFIG
++        {
++            get
++            {
++
++                return _USER_CONFIG_PARAM;
++            }
++        }
++
++        public string FO
++        {
++            get
++            {
++
++                return GetValue(FO_KEY);
++            }
++        }
++
++        public string XML
++        {
++            get
++            {
++
++                return GetValue(XML_KEY);
++            }
++        }
++
++        public string XSL
++        {
++            get
++            {
++
++                return GetValue(XSL_KEY);
++            }
++        }
++
++
++        public string PDF
++        {
++            get
++            {
++
++                return GetValue(PDF_KEY);
++            }
++        }
++
++        public string FOOUT
++        {
++            get
++            {
++
++                return GetValue(FOOUT_KEY);
++            }
++        }
++
++        public override string ToString()
++        {
++            System.Text.StringBuilder output = new System.Text.StringBuilder();
++
++            if (HasArguments)
++            {
++                if (this.HasUSERCONFIG)     output.AppendFormat("-c {0}{1}"     ,this.USERCONFIG, Environment.NewLine);
++                if (this.HasFO)             output.AppendFormat("-fo {0}{1}"    ,this.FO        , Environment.NewLine);
++                if (this.HasXML)            output.AppendFormat("-xml {0}{1}"   ,this.XML       , Environment.NewLine);
++                if (this.HasXSL)            output.AppendFormat("-xsl {0}{1}"   ,this.XSL       , Environment.NewLine);
++                if (this.HasFOOUT)          output.AppendFormat("-foout {0}{1}" ,this.FOOUT     , Environment.NewLine);
++                if (this.HasPDF)            output.AppendFormat("-pdf {0}{1}"   ,this.PDF       , Environment.NewLine);
++            }
++            else
++            {
++                output.Append("no command line parameters.");
++            }
++
++            return output.ToString();
++        }
++    }
++}
+Index: nfop/nfopapp/NFopApp.cs
+===================================================================
+--- nfop/nfopapp/NFopApp.cs	(revision 0)
++++ nfop/nfopapp/NFopApp.cs	(revision 0)
+@@ -0,0 +1,210 @@
++/*
++ * $Id: NFopApp.cs,v 1.0 2008/02/17 mrbool Exp $
++ * ============================================================================
++ *                    The Apache Software License, Version 1.1
++ * ============================================================================
++ * 
++ * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
++ * 
++ * Redistribution and use in source and binary forms, with or without modifica-
++ * tion, are permitted provided that the following conditions are met:
++ * 
++ * 1. Redistributions of source code must retain the above copyright notice,
++ *    this list of conditions and the following disclaimer.
++ * 
++ * 2. Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ * 
++ * 3. The end-user documentation included with the redistribution, if any, must
++ *    include the following acknowledgment: "This product includes software
++ *    developed by the Apache Software Foundation (http://www.apache.org/)."
++ *    Alternately, this acknowledgment may appear in the software itself, if
++ *    and wherever such third-party acknowledgments normally appear.
++ * 
++ * 4. The names "FOP" and "Apache Software Foundation" must not be used to
++ *    endorse or promote products derived from this software without prior
++ *    written permission. For written permission, please contact
++ *    apache@apache.org.
++ * 
++ * 5. Products derived from this software may not be called "Apache", nor may
++ *    "Apache" appear in their name, without prior written permission of the
++ *    Apache Software Foundation.
++ * 
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
++ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
++ * APACHE SOFTWARE FOUNDATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLU-
++ * DING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
++ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ * ============================================================================
++ * 
++ * This software consists of voluntary contributions made by many individuals
++ * on behalf of the Apache Software Foundation and was originally created by
++ * James Tauber <jtauber@jtauber.com>. For more information on the Apache
++ * Software Foundation, please see <http://www.apache.org/>.
++ */ 
++
++using System;
++
++namespace NFopApp
++{
++   
++
++    
++    public class NFopApp
++    {
++        public static void PrintUsage()
++        {
++            Console.WriteLine(GetUsage());
++        }
++
++        public static string GetUsage()
++        {
++            System.Text.StringBuilder usageBuffer = new System.Text.StringBuilder();
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("nFop [options] [-fo|-xml] <infile> [-xsl file] [-foout | -pdf] <outfile>");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("[OPTIONS]");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("-c cfg.xml        use additional configuration file cfg.xml");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("(you can set NFOP_USER_CONFIG_PATH environment variable and override it with -c parameter)");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("[INPUT]");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("infile            xsl:fo input file (the same as the next)");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("-fo  infile       xsl:fo input file");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("-xml infile       xml input file, must be used together with -xsl");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("-xsl stylesheet   xslt stylesheet");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("[OUTPUT]");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("-pdf outfile      input will be rendered as pdf file (outfile req'd)");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("-foout outfile    input will be rendered as fo file (outfile req'd)");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("[Examples]");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("nFop foo.fo foo.pdf");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("nFop -fo foo.fo -pdf foo.pdf (does the same as the previous line)");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("nFop -xsl foo.xsl -xml foo.xml -pdf foo.pdf");
++            usageBuffer.AppendFormat(Environment.NewLine);
++            usageBuffer.AppendFormat("nFop -xsl foo.xsl -xml foo.xml -foout foo.fo -pdf foo.pdf");
++            usageBuffer.AppendFormat(Environment.NewLine);
++
++            return usageBuffer.ToString();
++        }
++
++        public static bool CheckParameters(CommandLineArguments cmdLineArgs)
++        {
++            if (cmdLineArgs.HasArguments)
++            {
++                switch (cmdLineArgs.Arguments.Count)
++                {
++                    case 2: if (cmdLineArgs.HasFO  && cmdLineArgs.HasPDF) return true; break;
++                    case 3: if (cmdLineArgs.HasXML && cmdLineArgs.HasXSL && cmdLineArgs.HasPDF) return true; break;
++                    case 4: if (cmdLineArgs.HasXML && cmdLineArgs.HasXSL && cmdLineArgs.HasFOOUT && cmdLineArgs.HasPDF) return true; break;
++                }
++            }
++
++            return false;
++        }
++
++
++        static int Main(string[] args)
++        {
++            int ExitCode = 0;
++
++            try
++            {
++                CommandLineArguments cmdLineArgs = new CommandLineArguments(args);
++
++                if (CheckParameters(cmdLineArgs))
++                {
++                    switch (cmdLineArgs.Arguments.Count)
++                    {
++                        case 2:
++
++                            if (cmdLineArgs.HasUSERCONFIG && cmdLineArgs.HasFO && cmdLineArgs.HasPDF)
++                            {
++                                Fop.Net.NFop.Create_PDF_from_FO_with_CONFIG(cmdLineArgs.FO, cmdLineArgs.PDF, cmdLineArgs.USERCONFIG);
++                            }
++                            else if (cmdLineArgs.HasUSERCONFIG == false && cmdLineArgs.HasFO && cmdLineArgs.HasPDF)
++                            {
++                                Fop.Net.NFop.Create_PDF_from_FO(cmdLineArgs.FO, cmdLineArgs.PDF);
++                            }
++
++                            break;
++                        case 3:
++
++                            if (cmdLineArgs.HasUSERCONFIG && cmdLineArgs.HasXML && cmdLineArgs.HasXSL && cmdLineArgs.HasPDF)
++                            {
++                                Fop.Net.NFop.Create_PDF_from_XML_XSL_with_CONFIG(cmdLineArgs.XML, cmdLineArgs.XSL, cmdLineArgs.PDF, cmdLineArgs.USERCONFIG);
++                            }
++                            else if (cmdLineArgs.HasUSERCONFIG == false && cmdLineArgs.HasXML && cmdLineArgs.HasXSL && cmdLineArgs.HasPDF)
++                            {
++                                Fop.Net.NFop.Create_PDF_from_XML_XSL(cmdLineArgs.XML, cmdLineArgs.XSL, cmdLineArgs.PDF);
++                            }
++
++                            break;
++                        case 4:
++
++                            if (cmdLineArgs.HasUSERCONFIG && cmdLineArgs.HasXML && cmdLineArgs.HasXSL && cmdLineArgs.HasFOOUT && cmdLineArgs.HasPDF)
++                            {
++                                Fop.Net.NFop.Create_PDF_and_FO_from_XML_XSL_with_CONFIG(cmdLineArgs.XML, cmdLineArgs.XSL, cmdLineArgs.FOOUT, cmdLineArgs.PDF, cmdLineArgs.USERCONFIG);
++                            }
++                            else if (cmdLineArgs.HasUSERCONFIG == false && cmdLineArgs.HasXML && cmdLineArgs.HasXSL && cmdLineArgs.HasFOOUT && cmdLineArgs.HasPDF)
++                            {
++                                Fop.Net.NFop.Create_PDF_and_FO_from_XML_XSL(cmdLineArgs.XML, cmdLineArgs.XSL, cmdLineArgs.FOOUT, cmdLineArgs.PDF);
++                            }
++
++                            break;
++                    }
++                }
++                else
++                {
++                    PrintUsage();
++                }
++            }
++            catch (System.IO.FileNotFoundException fileNotFoundException)
++            {
++                ExitCode = 1;
++                Console.WriteLine(fileNotFoundException.Message);
++            }
++            catch (CommandLineArgumentException commandLineArgumentException)
++            {
++                ExitCode = 1;
++                Console.WriteLine("{0}:\t{1}", commandLineArgumentException.Message, commandLineArgumentException.ParamName);
++            }
++            catch (Exception exception)
++            {
++                ExitCode = 1;
++                Console.WriteLine("{0}{1}{2}", exception.Message, Environment.NewLine, exception.StackTrace);
++            }
++
++            return ExitCode;
++        }
++    }
++}
+Index: nfop/nfopapp/NFopApp.csproj
+===================================================================
+--- nfop/nfopapp/NFopApp.csproj	(revision 0)
++++ nfop/nfopapp/NFopApp.csproj	(revision 0)
+@@ -0,0 +1,55 @@
++﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <PropertyGroup>
++    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
++    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
++    <ProductVersion>8.0.50727</ProductVersion>
++    <SchemaVersion>2.0</SchemaVersion>
++    <ProjectGuid>{0220014E-4F5B-4191-8501-65FB3341AD50}</ProjectGuid>
++    <OutputType>Exe</OutputType>
++    <AppDesignerFolder>Properties</AppDesignerFolder>
++    <RootNamespace>NFopApp</RootNamespace>
++    <AssemblyName>nfop</AssemblyName>
++  </PropertyGroup>
++  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
++    <DebugSymbols>true</DebugSymbols>
++    <DebugType>full</DebugType>
++    <Optimize>false</Optimize>
++    <OutputPath>bin\Debug\</OutputPath>
++    <DefineConstants>DEBUG;TRACE</DefineConstants>
++    <ErrorReport>prompt</ErrorReport>
++    <WarningLevel>4</WarningLevel>
++  </PropertyGroup>
++  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
++    <DebugType>pdbonly</DebugType>
++    <Optimize>true</Optimize>
++    <OutputPath>bin\Release\</OutputPath>
++    <DefineConstants>TRACE</DefineConstants>
++    <ErrorReport>prompt</ErrorReport>
++    <WarningLevel>4</WarningLevel>
++  </PropertyGroup>
++  <ItemGroup>
++    <Reference Include="System" />
++    <Reference Include="System.Data" />
++    <Reference Include="System.Xml" />
++  </ItemGroup>
++  <ItemGroup>
++    <Compile Include="CommandLineArgumentException.cs" />
++    <Compile Include="CommandLineArguments.cs" />
++    <Compile Include="NFopApp.cs" />
++    <Compile Include="Properties\AssemblyInfo.cs" />
++  </ItemGroup>
++  <ItemGroup>
++    <ProjectReference Include="..\NFop\Fop.Net.csproj">
++      <Project>{90AF5D94-1F24-4275-B51E-08252CCA816C}</Project>
++      <Name>Fop.Net</Name>
++    </ProjectReference>
++  </ItemGroup>
++  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
++  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
++       Other similar extension points exist, see Microsoft.Common.targets.
++  <Target Name="BeforeBuild">
++  </Target>
++  <Target Name="AfterBuild">
++  </Target>
++  -->
++</Project>
+\ No newline at end of file
+Index: nfop/nfopapp/Properties/AssemblyInfo.cs
+===================================================================
+--- nfop/nfopapp/Properties/AssemblyInfo.cs	(revision 0)
++++ nfop/nfopapp/Properties/AssemblyInfo.cs	(revision 0)
+@@ -0,0 +1,33 @@
++﻿using System.Reflection;
++using System.Runtime.CompilerServices;
++using System.Runtime.InteropServices;
++
++// General Information about an assembly is controlled through the following 
++// set of attributes. Change these attribute values to modify the information
++// associated with an assembly.
++[assembly: AssemblyTitle("NFopApp")]
++[assembly: AssemblyDescription("")]
++[assembly: AssemblyConfiguration("")]
++[assembly: AssemblyCompany("")]
++[assembly: AssemblyProduct("NFopApp")]
++[assembly: AssemblyCopyright("Copyright ©  2008")]
++[assembly: AssemblyTrademark("")]
++[assembly: AssemblyCulture("")]
++
++// Setting ComVisible to false makes the types in this assembly not visible 
++// to COM components.  If you need to access a type in this assembly from 
++// COM, set the ComVisible attribute to true on that type.
++[assembly: ComVisible(false)]
++
++// The following GUID is for the ID of the typelib if this project is exposed to COM
++[assembly: Guid("d6366824-4a93-41d7-a296-f5d7e32ace55")]
++
++// Version information for an assembly consists of the following four values:
++//
++//      Major Version
++//      Minor Version 
++//      Build Number
++//      Revision
++//
++[assembly: AssemblyVersion("1.0.0.0")]
++[assembly: AssemblyFileVersion("1.0.0.0")]
+Index: nfop/ttfreader/Properties/AssemblyInfo.cs
+===================================================================
+--- nfop/ttfreader/Properties/AssemblyInfo.cs	(revision 0)
++++ nfop/ttfreader/Properties/AssemblyInfo.cs	(revision 0)
+@@ -0,0 +1,33 @@
++﻿using System.Reflection;
++using System.Runtime.CompilerServices;
++using System.Runtime.InteropServices;
++
++// General Information about an assembly is controlled through the following 
++// set of attributes. Change these attribute values to modify the information
++// associated with an assembly.
++[assembly: AssemblyTitle("TTFReader")]
++[assembly: AssemblyDescription("")]
++[assembly: AssemblyConfiguration("")]
++[assembly: AssemblyCompany("")]
++[assembly: AssemblyProduct("TTFReader")]
++[assembly: AssemblyCopyright("Copyright ©  2008")]
++[assembly: AssemblyTrademark("")]
++[assembly: AssemblyCulture("")]
++
++// Setting ComVisible to false makes the types in this assembly not visible 
++// to COM components.  If you need to access a type in this assembly from 
++// COM, set the ComVisible attribute to true on that type.
++[assembly: ComVisible(false)]
++
++// The following GUID is for the ID of the typelib if this project is exposed to COM
++[assembly: Guid("05955555-ef8f-4383-a92c-e168e3fb00d7")]
++
++// Version information for an assembly consists of the following four values:
++//
++//      Major Version
++//      Minor Version 
++//      Build Number
++//      Revision
++//
++[assembly: AssemblyVersion("1.0.0.0")]
++[assembly: AssemblyFileVersion("1.0.0.0")]
+Index: nfop/ttfreader/TTFReader.cs
+===================================================================
+--- nfop/ttfreader/TTFReader.cs	(revision 0)
++++ nfop/ttfreader/TTFReader.cs	(revision 0)
+@@ -0,0 +1,75 @@
++/*
++ * $Id: NFop.cs,v 1.0 2008/02/17 mrbool Exp $
++ * ============================================================================
++ *                    The Apache Software License, Version 1.1
++ * ============================================================================
++ * 
++ * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
++ * 
++ * Redistribution and use in source and binary forms, with or without modifica-
++ * tion, are permitted provided that the following conditions are met:
++ * 
++ * 1. Redistributions of source code must retain the above copyright notice,
++ *    this list of conditions and the following disclaimer.
++ * 
++ * 2. Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ * 
++ * 3. The end-user documentation included with the redistribution, if any, must
++ *    include the following acknowledgment: "This product includes software
++ *    developed by the Apache Software Foundation (http://www.apache.org/)."
++ *    Alternately, this acknowledgment may appear in the software itself, if
++ *    and wherever such third-party acknowledgments normally appear.
++ * 
++ * 4. The names "FOP" and "Apache Software Foundation" must not be used to
++ *    endorse or promote products derived from this software without prior
++ *    written permission. For written permission, please contact
++ *    apache@apache.org.
++ * 
++ * 5. Products derived from this software may not be called "Apache", nor may
++ *    "Apache" appear in their name, without prior written permission of the
++ *    Apache Software Foundation.
++ * 
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
++ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
++ * APACHE SOFTWARE FOUNDATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLU-
++ * DING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
++ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ * ============================================================================
++ * 
++ * This software consists of voluntary contributions made by many individuals
++ * on behalf of the Apache Software Foundation and was originally created by
++ * James Tauber <jtauber@jtauber.com>. For more information on the Apache
++ * Software Foundation, please see <http://www.apache.org/>.
++ */ 
++
++using System;
++
++namespace NFop
++{
++    public class TTFReader
++    {
++        public static int Main(string[] args)
++        { 
++            int ExitCode = 0;
++
++            try
++            {
++                org.apache.fop.fonts.apps.TTFReader.main(args);
++            }
++            catch (Exception ex)
++            {
++                ExitCode = 1;
++                Console.WriteLine("{0}{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace);
++            }
++
++            return ExitCode;   
++        }
++    }
++}
+Index: nfop/ttfreader/TTFReader.csproj
+===================================================================
+--- nfop/ttfreader/TTFReader.csproj	(revision 0)
++++ nfop/ttfreader/TTFReader.csproj	(revision 0)
+@@ -0,0 +1,53 @@
++﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <PropertyGroup>
++    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
++    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
++    <ProductVersion>8.0.50727</ProductVersion>
++    <SchemaVersion>2.0</SchemaVersion>
++    <ProjectGuid>{2DFB469C-4313-4805-9DB1-03C624D964DE}</ProjectGuid>
++    <OutputType>Exe</OutputType>
++    <AppDesignerFolder>Properties</AppDesignerFolder>
++    <RootNamespace>Fop.Net</RootNamespace>
++    <AssemblyName>ttfreader</AssemblyName>
++  </PropertyGroup>
++  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
++    <DebugSymbols>true</DebugSymbols>
++    <DebugType>full</DebugType>
++    <Optimize>false</Optimize>
++    <OutputPath>bin\Debug\</OutputPath>
++    <DefineConstants>DEBUG;TRACE</DefineConstants>
++    <ErrorReport>prompt</ErrorReport>
++    <WarningLevel>4</WarningLevel>
++  </PropertyGroup>
++  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
++    <DebugType>pdbonly</DebugType>
++    <Optimize>true</Optimize>
++    <OutputPath>bin\Release\</OutputPath>
++    <DefineConstants>TRACE</DefineConstants>
++    <ErrorReport>prompt</ErrorReport>
++    <WarningLevel>4</WarningLevel>
++  </PropertyGroup>
++  <ItemGroup>
++    <Reference Include="System" />
++    <Reference Include="System.Data" />
++    <Reference Include="System.Xml" />
++  </ItemGroup>
++  <ItemGroup>
++    <Compile Include="TTFReader.cs" />
++    <Compile Include="Properties\AssemblyInfo.cs" />
++  </ItemGroup>
++  <ItemGroup>
++    <ProjectReference Include="..\..\apachefop.net\ApacheFop.Net.vjsproj">
++      <Project>{020E2B1A-0E89-4738-9DBE-A66660654E55}</Project>
++      <Name>ApacheFop.Net</Name>
++    </ProjectReference>
++  </ItemGroup>
++  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
++  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
++       Other similar extension points exist, see Microsoft.Common.targets.
++  <Target Name="BeforeBuild">
++  </Target>
++  <Target Name="AfterBuild">
++  </Target>
++  -->
++</Project>
+\ No newline at end of file
+Index: scripts/fop.cmd
+===================================================================
+--- scripts/fop.cmd	(revision 0)
++++ scripts/fop.cmd	(revision 0)
+@@ -0,0 +1,40 @@
++@ECHO OFF
++SET ILMERGE=%ProgramFiles%\Microsoft\ilmerge\ilmerge.exe
++
++IF NOT EXIST %ILMERGE% GOTO ILMERGENOTFOUND
++
++SET NFOP="..\build\nfop.exe"
++
++IF NOT EXIST %NFOP% GOTO NOEXECUTABLEFOUND
++
++echo Call nfop
++%NFOP% %1 %2 %3 %4 %5 %6 %7 %8 %9
++
++GOTO END
++
++:NOEXECUTABLEFOUND
++
++echo %NFOP% not found
++
++ECHO Merge Assembly
++CALL merge_assembly.cmd
++
++echo Call nfop
++%NFOP% %1 %2 %3 %4 %5 %6 %7 %8
++
++GOTO END
++
++:ILMERGENOTFOUND
++echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
++echo.
++echo %ILMERGE% NOT FOUND !
++echo.
++echo download it from http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0
++echo.
++echo install and try again
++echo.
++echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
++
++:END
++SET ILMERGE=
++SET NFOP=
+\ No newline at end of file
+Index: scripts/makeall.cmd
+===================================================================
+--- scripts/makeall.cmd	(revision 0)
++++ scripts/makeall.cmd	(revision 0)
+@@ -0,0 +1,5 @@
++@ECHO OFF
++CLS
++call merge_assembly.cmd
++call ttfreader.cmd
++call userconfig
+\ No newline at end of file
+Index: scripts/merge_assembly.cmd
+===================================================================
+--- scripts/merge_assembly.cmd	(revision 0)
++++ scripts/merge_assembly.cmd	(revision 0)
+@@ -0,0 +1,61 @@
++@ECHO OFF
++SET ILMERGE=%ProgramFiles%\Microsoft\ilmerge\ilmerge.exe
++
++IF NOT EXIST %ILMERGE% GOTO ILMERGENOTFOUND
++
++SET BUILD_CONFIGURATION=Debug
++REM SET BUILD_CONFIGURATION=Release
++SET TARGET_DIR=..\build
++
++DEL %TARGET_DIR%\*.*
++
++SET APACHE_FOP_DLL=apachefop.net.dll
++SET FOP_NET_DLL=fop.net.dll
++SET NFOP_DLL=nfop.dll
++SET NFOP_EXE=nfop.exe
++SET TTFREADER_EXE=ttfreader.exe
++
++SET CREATE_TTFREADER=%ILMERGE% /target:exe /ndebug /v2 /out:%TARGET_DIR%\%TTFREADER_EXE% ..\NFop\TTFReader\bin\%BUILD_CONFIGURATION%\%TTFREADER_EXE% ..\NFop\NFopApp\bin\%BUILD_CONFIGURATION%\%APACHE_FOP_DLL%
++SET CREATE_NFOP=%ILMERGE% /target:exe /ndebug /v2 /out:%TARGET_DIR%\%NFOP_EXE% ..\NFop\NFopApp\bin\%BUILD_CONFIGURATION%\%NFOP_EXE% ..\NFop\NFopApp\bin\%BUILD_CONFIGURATION%\%FOP_NET_DLL% ..\NFop\NFopApp\bin\%BUILD_CONFIGURATION%\%APACHE_FOP_DLL%
++SET CREATE_EXTRA_DLL=%ILMERGE% /target:library  /ndebug /v2 /out:%TARGET_DIR%\%NFOP_DLL% ..\NFop\NFopApp\bin\%BUILD_CONFIGURATION%\%FOP_NET_DLL% ..\NFop\NFopApp\bin\%BUILD_CONFIGURATION%\%APACHE_FOP_DLL%
++
++
++
++echo %CREATE_TTFREADER%
++%CREATE_TTFREADER%
++echo.
++echo %CREATE_NFOP%
++%CREATE_NFOP%
++echo.
++echo %CREATE_EXTRA_DLL%
++%CREATE_EXTRA_DLL%
++
++
++
++SET BUILD_CONFIGURATION=
++SET TARGET_DIR=
++
++SET APACHE_FOP_DLL=
++SET FOP_NET_DLL=
++SET NFOP_DLL=
++SET NFOP_EXE=
++SET TTFREADER_EXE=
++
++SET CREATE_TTFREADER=
++SET CREATE_NFOP=
++SET CREATE_EXTRA_DLL=
++GOTO END
++
++:ILMERGENOTFOUND
++echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
++echo.
++echo %ILMERGE% NOT FOUND !
++echo.
++echo download it from http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0
++echo.
++echo install and try again
++echo.
++echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
++
++:END
++SET ILMERGE=
+\ No newline at end of file
+Index: scripts/ttfreader.cmd
+===================================================================
+--- scripts/ttfreader.cmd	(revision 0)
++++ scripts/ttfreader.cmd	(revision 0)
+@@ -0,0 +1,53 @@
++@ECHO OFF
++SET ILMERGE=%ProgramFiles%\Microsoft\ilmerge\ilmerge.exe
++
++IF NOT EXIST %ILMERGE% GOTO ILMERGENOTFOUND
++
++SET TTFREADER=..\build\ttfreader.exe
++SET NFOP_CONF_PATH=..\conf
++SET TTF_FONTS_PATH=..\conf
++
++IF NOT EXIST %TTF_FONTS_PATH%\arial.ttf    copy %windir%\fonts\arial.ttf    %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\arialbd.ttf  copy %windir%\fonts\arialbd.ttf  %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\ariali.ttf   copy %windir%\fonts\ariali.ttf   %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\arialbi.ttf  copy %windir%\fonts\arialbi.ttf  %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\cour.ttf     copy %windir%\fonts\cour.ttf     %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\courbd.ttf   copy %windir%\fonts\courbd.ttf   %TTF_FONTS_PATH%\ 
++IF NOT EXIST %TTF_FONTS_PATH%\couri.ttf    copy %windir%\fonts\couri.ttf    %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\courbi.ttf   copy %windir%\fonts\courbi.ttf   %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\times.ttf    copy %windir%\fonts\times.ttf    %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\timesbd.ttf  copy %windir%\fonts\timesbd.ttf  %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\timesi.ttf   copy %windir%\fonts\timesi.ttf   %TTF_FONTS_PATH%\
++IF NOT EXIST %TTF_FONTS_PATH%\timesbi.ttf  copy %windir%\fonts\timesbi.ttf  %TTF_FONTS_PATH%\ 
++
++%TTFREADER%  %TTF_FONTS_PATH%\arial.ttf    %NFOP_CONF_PATH%\arial.xml
++%TTFREADER%  %TTF_FONTS_PATH%\arialbd.ttf  %NFOP_CONF_PATH%\arial-bold.xml
++%TTFREADER%  %TTF_FONTS_PATH%\ariali.ttf   %NFOP_CONF_PATH%\arial-italic.xml
++%TTFREADER%  %TTF_FONTS_PATH%\arialbi.ttf  %NFOP_CONF_PATH%\arial-italic-bold.xml
++%TTFREADER%  %TTF_FONTS_PATH%\cour.ttf     %NFOP_CONF_PATH%\cour-new.xml
++%TTFREADER%  %TTF_FONTS_PATH%\courbd.ttf   %NFOP_CONF_PATH%\courier-new-bold.xml
++%TTFREADER%  %TTF_FONTS_PATH%\couri.ttf    %NFOP_CONF_PATH%\courier-new-italic.xml
++%TTFREADER%  %TTF_FONTS_PATH%\courbi.ttf   %NFOP_CONF_PATH%\courier-new-italic-bold.xml
++%TTFREADER%  %TTF_FONTS_PATH%\times.ttf    %NFOP_CONF_PATH%\times-new-roman.xml
++%TTFREADER%  %TTF_FONTS_PATH%\timesbd.ttf  %NFOP_CONF_PATH%\times-new-roman-bold.xml
++%TTFREADER%  %TTF_FONTS_PATH%\timesi.ttf   %NFOP_CONF_PATH%\times-new-roman-italic.xml
++%TTFREADER%  %TTF_FONTS_PATH%\timesbi.ttf  %NFOP_CONF_PATH%\times-new-roman-italic-bold.xml
++
++GOTO END
++
++:ILMERGENOTFOUND
++echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
++echo.
++echo %ILMERGE% NOT FOUND !
++echo.
++echo download it from http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0
++echo.
++echo install and try again
++echo.
++echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
++
++:END
++SET ILMERGE=
++SET TTFREADER=
++SET NFOP_CONF_PATH=
++SET TTF_FONTS_PATH=
+\ No newline at end of file
+Index: scripts/userconfig.cmd
+===================================================================
+--- scripts/userconfig.cmd	(revision 0)
++++ scripts/userconfig.cmd	(revision 0)
+@@ -0,0 +1,5 @@
++@ECHO OFF
++
++IF EXIST ..\tests\userconfig.pdf DEL ..\tests\userconfig.pdf
++
++call fop.cmd  -c ..\conf\userconfig.xml  -xml ..\conf\userconfig.xml -xsl ..\tests\userconfig.xsl -pdf ..\tests\userconfig1.pdf
+\ No newline at end of file
+Index: tests/userconfig.xsl
+===================================================================
+--- tests/userconfig.xsl	(revision 0)
++++ tests/userconfig.xsl	(revision 0)
+@@ -0,0 +1,87 @@
++<?xml version="1.0" encoding="utf-8"?>
++<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
++
++	<xsl:template match="configuration">
++		<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
++			<fo:layout-master-set>
++				<fo:simple-page-master master-name="userconfig" page-height="29.7cm" page-width="25cm" margin-top="0.5cm" margin-bottom="0.5cm" margin-left="0.5cm" margin-right="0.5cm">
++					<fo:region-body/>
++				</fo:simple-page-master>
++			</fo:layout-master-set>
++			<fo:page-sequence master-reference="userconfig">
++				<fo:flow flow-name="xsl-region-body">
++					<fo:block padding="2pt" text-align="center">
++						<fo:table table-layout="fixed">
++							<fo:table-column column-width="8cm"/>
++							<fo:table-column column-width="8cm"/>
++							<fo:table-column column-width="8cm"/>
++							<fo:table-body>
++								<xsl:for-each select="fonts/font">
++									<xsl:call-template name="font-triplet-row">
++										<xsl:with-param name="font-triplet" select="font-triplet"/>
++									</xsl:call-template>
++								</xsl:for-each>
++							</fo:table-body>
++						</fo:table>
++					</fo:block>
++				</fo:flow>
++			</fo:page-sequence>
++		</fo:root>
++	</xsl:template>
++
++	<xsl:template name="font-triplet-row">
++		<xsl:param name="font-triplet"/>
++		<fo:table-row>
++			<xsl:call-template name="font-triplet-cell">
++				<xsl:with-param name="font-triplet-attr" select="$font-triplet/@name"/>
++				<xsl:with-param name="font-family"  select="$font-triplet/@name"/>
++				<xsl:with-param name="font-style"   select="$font-triplet/@style"/>
++				<xsl:with-param name="font-weight" select="$font-triplet/@weight"/>
++			</xsl:call-template>
++				<xsl:call-template name="font-triplet-cell">
++				<xsl:with-param name="font-triplet-attr" select="$font-triplet/@style"/>
++				<xsl:with-param name="font-family"  select="$font-triplet/@name"/>
++				<xsl:with-param name="font-style"   select="$font-triplet/@style"/>
++				<xsl:with-param name="font-weight" select="$font-triplet/@weight"/>
++			</xsl:call-template>
++			<xsl:call-template name="font-triplet-cell">
++				<xsl:with-param name="font-triplet-attr" select="$font-triplet/@weight"/>
++				<xsl:with-param name="font-family"  select="$font-triplet/@name"/>
++				<xsl:with-param name="font-style"   select="$font-triplet/@style"/>
++				<xsl:with-param name="font-weight" select="$font-triplet/@weight"/>
++			</xsl:call-template>
++		</fo:table-row>
++	</xsl:template>
++
++	<xsl:template name="font-triplet-cell">
++	<xsl:param name="font-triplet-attr"/>
++	<xsl:param name="font-family"/>
++	<xsl:param name="font-style"/>
++	<xsl:param name="font-weight"/>
++		<fo:table-cell border-style="solid" border-width="0.5px">
++            <xsl:call-template name="font-triplet-block">
++                <xsl:with-param name="value" select="$font-triplet-attr"/>
++                <xsl:with-param name="font-family" select="$font-family"/>
++                <xsl:with-param name="font-style" select="$font-style"/>
++                <xsl:with-param name="font-weight" select="$font-weight"/>
++                <xsl:with-param name="font-size" select="20"/>
++            </xsl:call-template>
++		</fo:table-cell>
++	</xsl:template>
++
++	<xsl:template name="font-triplet-block">
++	<xsl:param name="value"/>
++	<xsl:param name="font-family"/>
++	<xsl:param name="font-style"/>
++	<xsl:param name="font-weight"/>
++	<xsl:param name="font-size"/>
++	    <xsl:text disable-output-escaping="yes">&lt;fo:block font-family="</xsl:text><xsl:value-of select="$font-family"/><xsl:text disable-output-escaping="yes">"</xsl:text>
++		<xsl:text disable-output-escaping="yes"> font-size="</xsl:text><xsl:value-of select="$font-size"/><xsl:text disable-output-escaping="yes">pt"</xsl:text>
++		<xsl:text disable-output-escaping="yes"> font-style="</xsl:text><xsl:value-of select="$font-style"/><xsl:text disable-output-escaping="yes">"</xsl:text>
++	    <xsl:text disable-output-escaping="yes"> font-weight="</xsl:text><xsl:value-of select="$font-weight"/><xsl:text disable-output-escaping="yes">"</xsl:text>
++	    <xsl:text disable-output-escaping="yes">&gt;</xsl:text>
++		<xsl:value-of select="$value"/>
++		<xsl:text disable-output-escaping="yes">&lt;/fo:block&gt;</xsl:text>
++	</xsl:template>
++
++</xsl:stylesheet>
+\ No newline at end of file
