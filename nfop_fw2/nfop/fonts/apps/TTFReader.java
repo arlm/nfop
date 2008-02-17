@@ -53,6 +53,7 @@ package org.apache.fop.fonts.apps;
 import java.io.*;
 import org.w3c.dom.*;
 import org.apache.fop.fonts.*;
+import org.apache.xml.serialize.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -98,7 +99,8 @@ public class TTFReader {
 
 
     private static final void displayUsage() {
-        System.out.println(" java org.apache.fop.fonts.apps.TTFReader [options] fontfile.ttf xmlfile.xml\n");
+//        System.out.println(" java org.apache.fop.fonts.apps.TTFReader [options] fontfile.ttf xmlfile.xml\n");
+		System.out.println(" TTFReader [options] fontfile.ttf xmlfile.xml\n");
         System.out.println(" where options can be:\n");
         System.out.println("-enc ansi");
         System.out.println("     With this option you create a WinAnsi encoded font.\n");
@@ -139,7 +141,7 @@ public class TTFReader {
      * You can use both -ef and -er. The file specified in -ef will be searched first,
      * then the -er file.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws java.io.IOException {
         String embFile = null;
         String embResource = null;
         String className = null;
@@ -193,14 +195,14 @@ public class TTFReader {
                     System.out.println("Creating WinAnsi encoded metrics");
 
                 if (doc != null) {
-                    app.writeFontXML(doc, arguments[1]);
-                }
+						app.writeFontXML(doc, arguments[1]);
 
-                if (ttf.isEmbeddable())
-                    System.out.println("This font contains no embedding license restrictions");
-                else
-                    System.out.println("** Note: This font contains license retrictions for\n"
-                                       + "         embedding. This font shouldn't be embedded.");
+						if (ttf.isEmbeddable())
+							System.out.println("This font contains no embedding license restrictions");
+						else
+							System.out.println("** Note: This font contains license retrictions for\n"
+											   + "         embedding. This font shouldn't be embedded.");
+                }
 
             }
         }
@@ -234,28 +236,17 @@ public class TTFReader {
      * @param   doc The DOM Document to save.
      * @param   target The target filename for the XML file.
      */
-    public void writeFontXML(org.w3c.dom.Document doc, String target) {
+    public void writeFontXML(org.w3c.dom.Document doc, String target) throws java.io.IOException
+	{
         System.out.println("Writing xml font file " + target + "...");
         System.out.println();
 
-        try {
-/*
-          javax.xml.transform.TransformerFactory.newInstance()
-            .newTransformer().transform(
-              new javax.xml.transform.dom.DOMSource(doc),
-              new javax.xml.transform.stream.StreamResult(new File(target)));
-
-            OutputFormat format = new OutputFormat(doc);    // Serialize DOM
-            FileWriter out = new FileWriter(target);    // Writer will be a String
-            XMLSerializer serial = new XMLSerializer(out, format);
-            serial.asDOMSerializer();                       // As a DOM Serializer
-
-            serial.serialize(doc.getDocumentElement());
-            out.close();
-*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		OutputFormat format = new OutputFormat(doc);    // Serialize DOM
+		FileWriter writer = new FileWriter(target);    // Writer will be a String
+		XMLSerializer serial = new XMLSerializer(writer, format);
+		serial.asDOMSerializer();                       // As a DOM Serializer
+		serial.serialize(doc.getDocumentElement());
+		writer.close();
     }
 
     /**

@@ -292,17 +292,20 @@ public class Configuration {
                                               Configuration.STANDARD);
     }
 
-
-    private static URL buildBaseURL(String directory) throws java.net.MalformedURLException {
-        if (directory == null) return null;
-        File dir = new File(directory);
-        if (dir.isDirectory()) {
-            return new URL(dir.toString());
-        } else {
-            URL baseURL = new URL(directory);
-            return baseURL;
-        }
-    }
+	private static URL buildBaseURL(String directory) throws java.net.MalformedURLException
+	{
+		if (directory == null) return null;
+		File dir = new File(directory);
+		if (dir.isDirectory())
+		{
+			return dir.toURL();
+		}
+		else
+		{
+			URL baseURL = new URL(directory);
+			return baseURL;
+		}
+	}
 
     public static URL getBaseURL() {
         if (cachedBaseURL != null) {
