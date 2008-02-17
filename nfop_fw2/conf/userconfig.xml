@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<fonts>
+		<font metrics-file="..\conf\arial.xml" embed-file="..\conf\arial.ttf" kerning="yes">
+			<font-triplet name="Arial" style="normal" weight="normal"/>
+		</font>
+		<font metrics-file="..\conf\arial-bold.xml" embed-file="..\conf\arialbd.ttf" kerning="yes">
+			<font-triplet name="Arial" style="normal" weight="bold"/>
+		</font>
+		<font metrics-file="..\conf\arial-italic.xml" embed-file="..\conf\ariali.ttf" kerning="yes">
+			<font-triplet name="Arial" style="italic" weight="normal"/>
+		</font>
+		<font metrics-file="..\conf\arial-italic-bold.xml" embed-file="..\conf\arialbi.ttf" kerning="yes">
+			<font-triplet name="Arial" style="italic" weight="bold"/>
+		</font>
+		<font metrics-file="..\conf\cour-new.xml" embed-file="..\conf\cour.ttf" kerning="yes">
+			<font-triplet name="CourierNew" style="normal" weight="normal"/>
+		</font>
+		<font metrics-file="..\conf\courier-new-bold.xml" embed-file="..\conf\courbd.ttf" kerning="yes">
+			<font-triplet name="CourierNew" style="normal" weight="bold"/>
+		</font>
+		<font metrics-file="..\conf\courier-new-italic.xml" embed-file="..\conf\couri.ttf" kerning="yes">
+			<font-triplet name="CourierNew" style="italic" weight="normal"/>
+		</font>
+		<font metrics-file="..\conf\courier-new-italic-bold.xml" embed-file="..\conf\courbi.ttf" kerning="yes">
+			<font-triplet name="CourierNew" style="italic" weight="bold"/>
+		</font>
+		<font metrics-file="..\conf\times-new-roman.xml" embed-file="..\conf\times.ttf" kerning="yes">
+			<font-triplet name="TimesNewRoman" style="normal" weight="normal"/>
+		</font>
+		<font metrics-file="..\conf\times-new-roman-bold.xml" embed-file="..\conf\timesbd.ttf" kerning="yes">
+			<font-triplet name="TimesNewRoman" style="normal" weight="bold"/>
+		</font>
+		<font metrics-file="..\conf\times-new-roman-italic.xml" embed-file="..\conf\timesi.ttf" kerning="yes">
+			<font-triplet name="TimesNewRoman" style="italic" weight="normal"/>
+		</font>
+		<font metrics-file="..\conf\times-new-roman-italic-bold.xml" embed-file="..\conf\timesbi.ttf" kerning="yes">
+			<font-triplet name="TimesNewRoman" style="italic" weight="bold"/>
+		</font>
+	</fonts>
+</configuration>

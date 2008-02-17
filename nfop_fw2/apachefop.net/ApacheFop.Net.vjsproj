@@ -8,14 +8,14 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>ApacheFop.Net</AssemblyName>
+    <AssemblyName>apachefop.net</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <OutputType>Library</OutputType>
-    <RootNamespace>ApacheFop</RootNamespace>
+    <RootNamespace>ApacheFop.Net</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -25,7 +25,7 @@
     </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputPath>build\lib\debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>build\lib\release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
@@ -78,7 +78,6 @@
     <Compile Include="apps\FormattingResults.java">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="apps\NFop.java" />
     <Compile Include="apps\PageSequenceResults.java">
       <SubType>Code</SubType>
     </Compile>
@@ -97,7 +96,7 @@
     <Compile Include="avalon\framework\logger\AbstractLogEnabled.java">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="avalon\framework\logger\ConsoleLogger.jsl">
+    <Compile Include="avalon\framework\logger\ConsoleLogger.java">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="avalon\framework\logger\LogEnabled.java">
@@ -2092,6 +2091,7 @@
     <Compile Include="tools\IOUtil.java">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="apps\NFop.java" />
     <Compile Include="tools\URLBuilder.java">
       <SubType>Code</SubType>
     </Compile>
