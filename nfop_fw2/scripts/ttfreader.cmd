@@ -1,9 +1,9 @@
 @ECHO OFF
-SET ILMERGE=%ProgramFiles%\Microsoft\ilmerge\ilmerge.exe
-
-IF NOT EXIST %ILMERGE% GOTO ILMERGENOTFOUND
 
 SET TTFREADER=..\build\ttfreader.exe
+
+IF NOT EXIST %TTFREADER% GOTO TTFREADERNOTFOUND
+
 SET NFOP_CONF_PATH=..\conf
 SET TTF_FONTS_PATH=..\conf
 
@@ -35,19 +35,15 @@ IF NOT EXIST %TTF_FONTS_PATH%\timesbi.ttf  copy %windir%\fonts\timesbi.ttf  %TTF
 
 GOTO END
 
-:ILMERGENOTFOUND
+:TTFREADERNOTFOUND
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo.
-echo %ILMERGE% NOT FOUND !
-echo.
-echo download it from http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0
-echo.
-echo install and try again
+echo %TTFREADER% NOT FOUND !
 echo.
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 :END
-SET ILMERGE=
+
 SET TTFREADER=
 SET NFOP_CONF_PATH=
 SET TTF_FONTS_PATH=
