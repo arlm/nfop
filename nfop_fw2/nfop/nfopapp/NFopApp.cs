@@ -133,7 +133,7 @@ namespace NFopApp
         }
 
 
-        static int Main(string[] args)
+        static void Main(string[] args)
         {
             int ExitCode = 0;
 
@@ -204,7 +204,7 @@ namespace NFopApp
                 Console.WriteLine("{0}{1}{2}", exception.Message, Environment.NewLine, exception.StackTrace);
             }
 
-            return ExitCode;
+            Environment.Exit(ExitCode);
         }
     }
 }

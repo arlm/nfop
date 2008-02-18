@@ -83,7 +83,7 @@ public class JpegImage extends AbstractFopImage {
     protected void loadImage() throws FopImageException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ByteArrayOutputStream iccStream = new ByteArrayOutputStream();
-        InputStream inStream;
+        InputStream inStream=null;
         this.m_colorSpace = new ColorSpace(ColorSpace.DEVICE_UNKNOWN);
         byte[] readBuf = new byte[4096];
         int bytes_read;
@@ -93,17 +93,39 @@ public class JpegImage extends AbstractFopImage {
         this.m_compressionType = new DCTFilter();
         this.m_compressionType.setApplied(true);
 
-        try {
-            inStream = this.m_href.openStream();
+		boolean isOpen = false;
+		try
+		{
+			inStream = this.m_href.openStream();
+			isOpen = true;
 
-            while ((bytes_read = inStream.read(readBuf)) != -1) {
-                baos.write(readBuf, 0, bytes_read);
-            }
-        } catch (java.io.IOException ex) {
-            throw new FopImageException("Error while loading image " +
-                                        this.m_href.toString() + " : " + ex.getClass() +
-                                        " - " + ex.getMessage());
-        }
+			while ((bytes_read = inStream.read(readBuf)) != -1)
+			{
+
+				baos.write(readBuf, 0, bytes_read);
+			}
+		
+		}
+		catch (java.io.IOException ex)
+		{
+			throw new FopImageException("Error while loading image " +
+										this.m_href.toString() + " : " + ex.getClass() +
+										" - " + ex.getMessage());
+		}
+		finally
+		{ 
+		  try
+		  {
+			  if (inStream != null && isOpen) inStream.close();
+		  }
+		  catch (java.io.IOException ex)
+		  {
+			  throw new FopImageException("Error on closing image " +
+										  this.m_href.toString() + " : " + ex.getClass() +
+										  " - " + ex.getMessage());
+		  }
+
+		}
 
         this.m_bitmaps = baos.toByteArray();
         this.m_bitsPerPixel = 8;
