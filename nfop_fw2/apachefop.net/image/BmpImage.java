@@ -82,10 +82,13 @@ public class BmpImage extends AbstractFopImage {
         int filepos = 0;
         InputStream file = null;
         byte palette[] = null;
+		boolean isOpen = false;
         try {
             file = this.m_href.openStream();
-            boolean eof = false;
+            boolean eof = false;				
+			isOpen = true;
             while ((!eof) && (filepos < 54)) {
+
                 int input = file.read();
                 if (input == -1)
                     eof = true;
@@ -119,6 +122,20 @@ public class BmpImage extends AbstractFopImage {
                                         + e.getClass() + " - "
                                         + e.getMessage());
         }
+		finally
+		{
+			try
+			{
+				if (file != null && isOpen) file.close();
+			}
+			catch (java.io.IOException ex)
+			{
+				throw new FopImageException("Error on closing image " +
+											this.m_href.toString() + " : " + ex.getClass() +
+											" - " + ex.getMessage());
+			}
+
+		}
         // gets h & w from headermap
         this.m_width = headermap[wpos] + headermap[wpos + 1] * 256
                        + headermap[wpos + 2] * 256 * 256
